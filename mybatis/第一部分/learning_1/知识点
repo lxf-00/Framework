@@ -1,0 +1,135 @@
+MyBatis框架：
+
+1，框架概述
+    1.1 框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种定义认为，框架是可被应用开发者定制的应用骨架。前者是从应用方面而后者是从目的方面给出的定义。
+    1.2 框架要解决的问题： 框架要解决的最重要的一个问题是技术整合的问题
+    1.3 软件开发的分层重要性：框架的重要性在于它实现了部分功能，并且能够很好的将低层应用平台和高层业务逻辑进行了缓和。为了实现
+                            软件工程中的“高内聚、低耦合”。把问题划分开来各个解决，易于控制，易于延展，易于分配资源。我们常见的
+                            MVC 软件设计思想就是很好的分层思想。
+    1.4 分层开发下的常见框架（常见的 JavaEE 开发框架):
+        1,4.1 解决数据的持久化问题的框架: MyBatis
+        1.4.2 解决 WEB 层问题的 MVC 框架: spring MVC
+        1.4.3 解决技术整合问题的框架: spring 框架
+
+2， MyBatis 框架：
+    2.1 MyBatis 框架概述： mybatis 是一个优秀的基于 java 的持久层框架，它内部封装了 jdbc，使开发者只需要关注 sql 语句本身，而不需要花费精力去处理加载驱动、创建连接、创建 statement 等繁杂的过程。
+                          mybatis 通过 xml 或注解的方式将要执行的各种 statement 配置起来，并通过 java 对象和 statement 中
+                          sql 的动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并
+                          返回。
+                          采用 ORM 思想解决了实体和数据库映射的问题，对 jdbc 进行了封装，屏蔽了 jdbc api 底层访问细节，使我
+                          们不用与 jdbc api 打交道，就可以完成对数据库的持久化操作
+    2.2  Mybatis 框架快速入门：
+        2.2.1 环境搭建
+            2.2.1.1 创建空的maven工程
+            2.2.1.2 导入mysql,mybatis，junit... jar坐标
+            2.2.1.3 创建实体类和dao接口
+            2.2.1.4 创建mybatis的主配置文件（SqlMapConfig.xml)
+            2.2.1.5 创建映射配置文件（UserDao.xml)
+        2.2.2 入门案例：使用概括
+            2.2.2.1 读取配置文件
+                很少使用绝对路径和相对路径；
+                第一种：使用类加载器，读取类路径的配置路径；
+                第二种：使用ServletContext对象的getRealPath()
+            2.2.2.2 创建SqlSessionFactory工厂
+                创建工厂，mybatis使用了构建者模式：把创建细节隐藏，使用之直接调用方法即可拿到对象。
+            2.2.2.3 使用工厂创建SqlSession对象
+                生产SqlSession使用了工厂模式：解耦（降低类之间的依赖关系）
+            2.2.2.4 使用SqlSession创建Dao接口的代理对象
+                创建Dao实现类使用了代理模式：不修改源码的基础上，对已有方法进行增强。
+            2.2.2.5 使用代理对象执行方法
+            2.2.2.6 释放资源
+    2.3 MyBatis 注解开发和编写
+	移除UserDao.xml,在dao接口方法上使@SELECT注解，并且指定sql语句。同时需要在SqlMapConfig.xml文件中mapper配置中，使用class属性指定dao接口的全限定类名。
+
+    2.4 自定义mybatis
+	    2.4.1 mybatis在使用代理dao方式实现增删改查：只做了两件事
+	        第一：创建代理对象
+	        第二：在代理对象中调用selectList
+        2.4.2 自定义mybatis涉及到的类
+            class Resuorce
+            class SqlSessionFactoryBuild
+            interface SqlSessionFactory
+            interface SqlSession
+	2.4.3 大致流程
+		2.4.3.1 SqlSessionFactoryBuilder接收SqlMapConfig.xml文件流，构建出SqlSessionFactory对象；
+		2.4.3.2 SqlSessionFactory读取SqlMapConfigu.xml中连接数据库和mapper映射信息。用来生产真正操作数据库的SqlSession对象。
+		2.4.3.3 SqlSession对象有两大作用：生成接口代理对象，定义增删改查方法。
+		2.4.3.4 封装结果集
+
+3. mybatis: curd方法
+    3.1 查询操作 select
+    3.2 保存操作 insert  (占位符#{})
+    3.3  更新操作  update (#{})
+    3.4  删除操作  delete (#{})
+    3.5  根据id查询用户、根据名称模糊查询用户(两种方式 #{} 占位符 ${}拼接sql串）
+    3.6  聚合函数查询
+    3.7  select last_insert_id(); 新增id的返回值
+
+4.配置参数细节
+    4.1 parameterType(输入类型）：ognl表达式（Object Graphic Navigation Language); 通过对象的取值方法来获取数据，在写法上把get给省略了。
+    4.2 自定义对象模糊查询
+    4.3 sql成员变量与sql不一致解决思路： 起别名；resultMap标签配置查询结果的列名和实体类的属性名对应关系： <resultMap id=”“ type><id property="" column=""/></resultType>
+    4.4 properties标签： 数据库连接配置，两种方式： properties内直接定义，dataSource标签内引用；外部引入。
+    4.5 typeAliases:自定义标签别名
+    4.6 mappers：映射器 <mapper resource="路径">; <mapper class="接口全限定类名">; <package name="接口全限定类名">;
+
+5. mybatis连接池和事务深入：
+  5.1 Mybatis 连接池的分类：
+    UNPOOLED 不使用连接池的数据源
+    POOLED 使用连接池的数据源
+    JNDI 使用 JNDI 实现的数据源
+  5.2 Mybatis 的事务控制： SqlSession session = factory.openSession(true); // 表示自动提交；默认为false,手动提交
+  5.3 Mybatis 的动态 SQL 语句：
+    5.3.1 动SQL <if>标签：
+    5.3.2 动态SQL <where>标签
+    5.3.3 动态SQL <foreach>标签
+
+6. Mybatis 中简化编写的 SQL 片段
+  6.1 抽取重复代码块：<sql id="defaultSql"> select * from user </sql>
+  6.2 引用代码片段: <include refid="defaultSql"></include>
+
+7. Mybatis多表查询之一对多
+  7.1 一对一查询(多对一): 两种方式
+      7.1.1 定义专门的 po 类作为输出类型，其中定义了 sql 查询结果集所有的字段。此方法较为简单，企业中使用普遍。
+      7.1.2 使用 resultMap，定义专门的 resultMap 用于映射一对一查询结果。association
+  7.2 一对多查询:如上，左连接 left join right join inner join
+  7.3  Mybatis 多表查询之多对多:实现 Role 到 User 多对多
+
+8. JNDI:
+
+9.  Mybatis 延迟加载策略
+  9.1 延迟加载：就是在需要用到数据时才进行加载，不需要用到数据时就不加载数据。延迟加载也称懒加载。
+              好处： 先从单表查询，需要时再从关联表去关联查询，大大提高数据库性能，因为查询单表要比关联查询多张表速度要快。
+              坏处：因为只有当需要用到数据时，才会进行数据库查询，这样在大批量数据查询时，因为查询工作也要消耗时间，所以可能造成用户等待时间变长，造成用户体验下降。
+
+              association、collection 具备延迟加载功能。
+  9.2 使用 association 实现延迟加载:主配置添加setting;映射文件.xml 下association添加select属性；
+  9.3 使用 Collection 实现延迟加载：
+  9.4  Mybatis 缓存: Mybatis 也提供了缓存策略，通过缓存策略来减少数据库的查询次数，从而提高性能。
+    9.4.1 Mybatis 一级缓存: 一级缓存是 SqlSession 级别的缓存，只要 SqlSession 没有 flush 或 close，它就存在。
+          <select id="findById" resultType="UsEr" parameterType="int" useCache="true">
+          一级缓存是 SqlSession 范围的缓存，当调用 SqlSession 的修改，添加，删除，commit()，close()等方法时，就会清空一级缓存。
+    9.4.2 Mybatis 二级缓存: 二级缓存是 mapper 映射级别的缓存，多个 SqlSession 去操作同一个 Mapper 映射的 sql 语句，多个SqlSession 可以共用二级缓存，二级缓存是跨 SqlSession 的。
+          二级缓存的开启与关闭:
+            第一步：在 SqlMapConfig.xml 文件开启二级缓存;
+            <setting name="cacheEnabled" value="true"/>
+            第二步：配置相关的 Mapper 映射文件:
+            <cache>标签表示当前这个 mapper 映射将使用二级缓存，区分的标准就看 mapper 的 namespace 值。
+            第三步：配置 statement 上面的 useCache 属性
+
+            当我们在使用二级缓存时，所缓存的类一定要实现 java.io.Serializable 接口，这种就可以使用序列化方式来保存对象。
+
+10.  Mybatis 注解开发
+
+    10.1: mybatis 的常用注解说明
+          @Insert:实现新增
+          @Update:实现更新
+          @Delete:实现删除
+          @Select:实现查询
+          @Result:实现结果集封装
+          @Results:可以与@Result 一起使用，封装多个结果集
+          @ResultMap:实现引用@Results 定义的封装
+          @One:实现一对一结果集封装
+          @Many:实现一对多结果集封装
+          @SelectProvider: 实现动态 SQL 映射
+          @CacheNamespace:实现注解二级缓存的使用
