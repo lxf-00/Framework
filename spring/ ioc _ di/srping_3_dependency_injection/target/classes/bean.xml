@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--依赖注入：dependency injection
+        IOC的作用:
+            降低程序间的的耦合（依赖关系）；
+        依赖关系的管理：
+            以后都交给spring来管理。
+        当前类需要用到其他类的对象，由spring来提供，我们只需要在配置文件中说明。
+
+        依赖关系的维护称之为：依赖注入
+        依赖注入：
+            能注入的数据：有三类
+                基本类型和String
+                其他bean类型（在配置文件中或者注解配置过的bean )
+                复杂类型/集合类型
+            注入的方式：
+                使用构造函数提供；
+                使用set方式提供；
+                使用注解提供；
+    -->
+    <!--构造函数注入
+        使用标签： constructor-arg
+        使用的位置： bean标签内部
+        标签中的属性：
+            type: 用于指定要注入数据的数据类型，该数据类型也是构造函数中某个或某些参数的类型
+            index：用于指定要注入数据给构造函数中指定索引位置的参数赋值，参数的索引的位置从0开始
+            name： 用于指定给构造函数中指定名称的参数赋值（常用）
+
+            value： 用于提供基本类型和String类型数据
+            ref:用于指定其他的bean类型数据，spring Ioc核心容器中出现过的对象
+        优势： 获取bean对象时，注入数据时必须操作，否则对象无法创建成功
+        弊端： 改变了bean对象的实例化方式，使我们在创建对象时，如果用不到这些数据，也必须提供。
+        -->
+    <bean id="accountService" class="com.factory.service.impl.AccountServiceImpl">
+        <constructor-arg name="name" value="test"></constructor-arg>
+        <constructor-arg name="age" value="23"></constructor-arg>
+        <constructor-arg name="birthday" ref="now"></constructor-arg>
+    </bean>
+
+    <!--使用set方法注入 ： 更常用
+        使用的标签：property
+        出现的位置：bean标签的内部
+        标签的属性：
+            name： 用于指定注入时所调用的set方法名称
+            value： 用于提供基本类型和String类型数据
+            ref:用于指定其他的bean类型数据，spring Ioc核心容器中出现过的对象
+        好处： 创建对象时没有明确的限制，可以直接使用默认构造函数
+        弊端： 如果某个成员必须有值，则set方法无法保证一定注入。
+    -->
+    <bean id="accountService1" class="com.factory.service.impl.AccountServiceImpl1">
+        <property name="name" value="test"></property>
+        <property name="age" value="23"></property>
+        <property name="birthday" ref="now"></property>
+    </bean>
+
+    <!--复杂数据注入/集合数据注入-->
+    <bean id="accountService2" class="com.factory.service.impl.AccountServiceImpl2">
+        <property name="myarray">
+            <array>
+                <value>AAA</value>
+                <value>BBBB</value>
+            </array>
+        </property>
+        <property name="mylist">
+            <list>
+                <value>aaaa</value>
+                <value>bbbb</value>
+            </list>
+        </property>
+        <property name="myset">
+            <set>
+                <value>aaaaa</value>
+                <value>bbbbbbb</value>
+            </set>
+        </property>
+        <property name="mymap">
+            <map>
+                <entry key="test1" value="0001"></entry>
+                <entry key="test2" value="0002"></entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <!--配置一个日期对象-->
+    <bean id="now" class="java.util.Date"></bean>
+</beans>
