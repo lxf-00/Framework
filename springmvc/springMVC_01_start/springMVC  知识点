@@ -1,0 +1,219 @@
+SpingMVC框架
+
+1. 三层架构和MVC
+    1.1 三层架构
+        1.1.1 表现层：WEB层，用来和客户端进行数据交互的。表现层一般会采用MVC的设计模型
+        1.1.2 业务层：处理公司具体的业务逻辑的
+        1.1.3  持久层：用来操作数据库的
+    1.2  MVC模型
+        1.2.1 MVC全名是Model View Controller 模型视图控制器，每个部分各司其职。
+        1.2.2 Model：数据模型，JavaBean的类，用来进行数据封装
+        1.2.3 View：指JSP、HTML用来展示数据给用户
+        1.2.4 Controller：用来接收用户的请求，整个流程的控制器。用来进行数据校验等
+
+2. SpringMVC
+    2.1 是一种基于Java实现的MVC设计模型的请求驱动类型的轻量级WEB框架
+    2.2 SpringMVC在三层架构中的位置：表现层
+    2.3 SpringMVC 的优势：
+        2.3.1 清晰的角色划分：
+            前端控制器（DispatcherServlet）
+            请求到处理器映射（HandlerMapping）
+            处理器适配器（HandlerAdapter）
+            视图解析器（ViewResolver）
+            处理器或页面控制器（Controller）
+            验证器（ Validator）
+            命令对象（Command 请求参数绑定到的对象就叫命令对象）
+            表单对象（Form Object 提供给表单展示和提交到的对象就叫表单对象）
+        2.3.2 分工明确，而且扩展点相当灵活，可以很容易扩展，虽然几乎不需要。
+        2.3.3 由于命令对象就是一个 POJO，无需继承框架特定 API，可以使用命令对象直接作为业务对象
+        2.3.4 和 Spring 其他框架无缝集成，是其它 Web 框架所不具备的。
+        2.3.5 可适配，通过 HandlerAdapter 可以支持任意的类作为处理器
+        2.3.6 可定制性，HandlerMapping、ViewResolver 等能够非常简单的定制
+        2.3.7 功能强大的数据验证、格式化、绑定机制。
+        2.3.8 利用 Spring 提供的 Mock 对象能够非常简单的进行 Web 层单元测试。
+        2.3.9 本地化、主题的解析的支持，使我们更容易进行国际化和主题的切换
+        2.3.10 强大的 JSP 标签库，使 JSP 编写更容易。
+    2.4 SpringMVC和Struts2框架的对比
+        共同点：
+        它们都是表现层框架，都是基于 MVC 模型编写的。
+        它们的底层都离不开原始 ServletAPI。
+        它们处理请求的机制都是一个核心控制器。
+        区别：
+        Spring MVC 的入口是 Servlet, 而 Struts2 是 Filter
+        Spring MVC 是基于方法设计的，而 Struts2 是基于类，Struts2 每次执行都会创建一个动作类。所
+        以 Spring MVC 会稍微比 Struts2 快些。
+        Spring MVC 使用更加简洁,同时还支持 JSR303, 处理 ajax 的请求更方便
+        (JSR303 是一套 JavaBean 参数校验的标准，它定义了很多常用的校验注解，我们可以直接将这些注
+        解加在我们 JavaBean 的属性上面，就可以在需要校验的时候进行校验了。)
+        Struts2 的 OGNL 表达式使页面的开发效率相比 Spring MVC 更高些，但执行效率并没有比 JSTL 提
+        升，尤其是 struts2 的表单标签，远没有 html 执行效率高。
+    2.5  SpringMVC使用的简单流程：
+        2.5.1 创建WEB工程，引入开发的jar包
+            <!-- 版本锁定 -->
+            <properties>
+            <spring.version>5.0.2.RELEASE</spring.version>
+            </properties>
+            <dependencies>
+            <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+            </dependency>
+            <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+            </dependency>
+            </dependencies>
+        2.5.2 配置核心的控制器（配置DispatcherServlet）
+            在web.xml配置文件中核心控制器DispatcherServlet
+                <!-- SpringMVC的核心控制器 -->
+                <servlet>
+                <servlet-name>dispatcherServlet</servlet-name>
+                <servlet-class>org.springframework.web.servlet.DispatcherServlet</servletclass>
+                <!-- 配置Servlet的初始化参数，读取springmvc的配置文件，创建spring容器 -->
+                <init-param>
+                <param-name>contextConfigLocation</param-name>
+                <param-value>classpath:springmvc.xml</param-value>
+                </init-param>
+                <!-- 配置servlet启动时加载对象 -->
+                <load-on-startup>1</load-on-startup>
+                </servlet>
+                <servlet-mapping>
+                <servlet-name>dispatcherServlet</servlet-name>
+                <url-pattern>/</url-pattern>
+                </servlet-mapping>
+        2.5.3 编写springmvc.xml的配置文件
+            <?xml version="1.0" encoding="UTF-8"?>
+            <beans xmlns="http://www.springframework.org/schema/beans"
+            xmlns:mvc="http://www.springframework.org/schema/mvc"
+            xmlns:context="http://www.springframework.org/schema/context"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd">
+            <!-- 配置spring创建容器时要扫描的包 -->
+            <context:component-scan base-package="com.itheima"></context:component-scan>
+            <!-- 配置视图解析器 -->
+            <bean id="viewResolver"
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="/WEB-INF/pages/"></property>
+            <property name="suffix" value=".jsp"></property>
+            </bean>
+            <!-- 配置spring开启注解mvc的支持
+            <mvc:annotation-driven></mvc:annotation-driven>-->
+            </beans>
+        2.5.4 编写index.jsp和HelloController控制器类
+        2.5.5 在WEB-INF目录下创建pages文件夹，编写success.jsp的成功页面
+        2.5.6 启动Tomcat服务器，进行测试
+    2.6 执行过程分析
+        2.6.1 当启动Tomcat服务器的时候，因为配置了load-on-startup标签，所以会创建DispatcherServlet对象，
+        就会加载springmvc.xml配置文件
+        2.6.2 开启了注解扫描，那么HelloController对象就会被创建
+        2.6.3 从index.jsp发送请求，请求会先到达DispatcherServlet核心控制器，根据配置@RequestMapping注解
+        找到执行的具体方法
+        2.6.4 根据执行方法的返回值，再根据配置的视图解析器，去指定的目录下查找指定名称的JSP文件
+        2.6.5 Tomcat服务器渲染页面，做出响应
+    2.7 RequestMapping注解
+        2.7.1  RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系
+        2.7.2 RequestMapping注解可以作用在方法和类上
+            作用在类上：第一级的访问目录
+            作用在方法上：第二级的访问目录
+            细节：路径可以不编写 / 表示应用的根目录开始
+            细节：${ pageContext.request.contextPath }也可以省略不写，但是路径上不能写 /
+        2.7.3 RequestMapping的属性
+             path 指定请求路径的url
+             value value属性和path属性是一样的
+             method 指定该方法的请求方式
+             params 指定限制请求参数的条件
+             headers 发送的请求中必须包含的请求头
+    2.8 请求参数的绑定
+        2.8.1 绑定机制:表单提交的数据都是k=v格式的,提交表单的name和参数的名称是相同的
+        2.8.2  支持的数据类型:基本数据类型和字符串类型、实体类型（JavaBean）、 集合数据类型（List、map集合等）
+        2.8.3 请求参数中文乱码的解决
+             在web.xml中配置Spring提供的过滤器类
+                <!-- 配置过滤器，解决中文乱码的问题 -->
+                <filter>
+                <filter-name>characterEncodingFilter</filter-name>
+                <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filterclass>
+                <!-- 指定字符集 -->
+                <init-param>
+                <param-name>encoding</param-name>
+                <param-value>UTF-8</param-value>
+                </init-param>
+                </filter>
+                <filter-mapping>
+                <filter-name>characterEncodingFilter</filter-name>
+                <url-pattern>/*</url-pattern>
+                </filter-mapping>
+        2.8.4  自定义类型转换器：
+            实现Converter<String, Date>接口，编写响应的转换规则
+            注册自定义类型转换器，在springmvc.xml配置文件中编写配置
+                <!-- 注册自定义类型转换器 -->
+                <bean id="conversionService"
+                class="org.springframework.context.support.ConversionServiceFactoryBean">
+                <property name="converters">
+                <set>
+                <bean class="cn.itcast.utils.StringToDateConverter"/>
+                </set>
+                </property>
+                </bean>
+                <!-- 开启Spring对MVC注解的支持 -->
+                <mvc:annotation-driven conversion-service="conversionService"/>
+        2.8.5 在控制器中使用原生的ServletAPI对象：只需要在控制器的方法参数定义HttpServletRequest和HttpServletResponse对象
+    2.9 常用的注解
+        2.9.1  RequestParam注解
+            作用：把请求中的指定名称的参数传递给控制器中的形参赋值
+            属性： value：请求参数中的名称； required：请求参数中是否必须提供此参数，默认值是true，必须提供
+        2.9.2  RequestBody注解
+            作用：用于获取请求体的内容（注意：get方法不可以）
+            属性：required：是否必须有请求体，默认值是true
+        2.9.3  PathVariable注解
+            作用：拥有绑定url中的占位符的
+            属性：value：指定url中的占位符名称
+            Restful风格的URL：请求路径一样，可以根据不同的请求方式去执行后台的不同方法；
+                优点：1. 结构清晰
+                     2. 符合标准
+                     3. 易于理解
+                     4. 扩展方便
+        2.9.4 RequestHeader注解
+            作用：获取指定请求头的值
+            属性：value：请求头的名称
+        2.9.5 CookieValue注解
+            作用：用于获取指定cookie的名称的值
+            属性：value：cookie的名称
+        2.9.6  ModelAttribute注解
+            作用：出现在方法上：表示当前方法会在控制器方法执行前线执行； 出现在参数上：获取指定的数据给参数赋值
+        2.9.7 SessionAttributes注解
+            作用：用于多次执行控制器方法间的参数共享
+            属性：value：指定存入属性的名称
+
+
+
+
+
+
+
+
+
