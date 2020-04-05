@@ -31,7 +31,7 @@ MyBatis框架：
                 第一种：使用类加载器，读取类路径的配置路径；
                 第二种：使用ServletContext对象的getRealPath()
             2.2.2.2 创建SqlSessionFactory工厂
-                创建工厂，mybatis使用了构建者模式：把创建细节隐藏，使用之直接调用方法即可拿到对象。
+                创建工厂，mybatis使用了构建者模式：把创建细节隐藏，使用直接调用方法即可拿到对象。
             2.2.2.3 使用工厂创建SqlSession对象
                 生产SqlSession使用了工厂模式：解耦（降低类之间的依赖关系）
             2.2.2.4 使用SqlSession创建Dao接口的代理对象
@@ -46,7 +46,7 @@ MyBatis框架：
 	        第一：创建代理对象
 	        第二：在代理对象中调用selectList
         2.4.2 自定义mybatis涉及到的类
-            class Resuorce
+            class Resource
             class SqlSessionFactoryBuild
             interface SqlSessionFactory
             interface SqlSession
