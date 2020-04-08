@@ -6,5 +6,6 @@ Java Web Framework(mybatis, spring) learning
 ### 2. spring MVC: 解决 WEB 层问题的 MVC 框架
 - [知识点回顾 梳理](https://github.com/lxf-00/Framework/blob/master/springmvc/springMVC_01_start/springMVC%20%20%E7%9F%A5%E8%AF%86%E7%82%B9)
 ### 3. spring: 解决技术整合问题的框架
+- [知识点回顾 梳理](https://github.com/lxf-00/Framework/blob/master/spring/spring%E7%9F%A5%E8%AF%86%E7%82%B9)
 ### 4. ssm 的整合
-- [maven高级应用分模块练习](http:www.baidu.com)
+- [maven高级应用分模块练习]
