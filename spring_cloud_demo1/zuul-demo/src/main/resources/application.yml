@@ -1,0 +1,27 @@
+server:
+  port: 8085
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8082/eureka
+spring:
+  application:
+    name: zuul-demo
+# zuul 路由配置(也可以不用以下配置）
+zuul:
+  prefix: /api # 添加路由前缀
+  routes:
+    user-service: /user/**
+  ignored-services:
+    - comsumer-demo
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000
+ribbon:
+  ConnectionTimeout: 500
+  ReadTimeout: 1000
+
