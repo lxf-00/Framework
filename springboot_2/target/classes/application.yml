@@ -1,0 +1,17 @@
+server:
+  port: 80
+  servlet:
+    path: /
+logging:
+  level:
+    com.example: debug
+     # org.springframework: debug
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.16.36.164:3306/spring_boot_1?characterEncoding=UTF-8
+    username: root
+    password: 123456
+mybatis:
+  type-aliases-package: com.example.pojo
+#  mapper-locations: mapper/*.xml
