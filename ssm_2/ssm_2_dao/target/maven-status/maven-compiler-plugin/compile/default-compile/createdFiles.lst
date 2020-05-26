@@ -1,0 +1,8 @@
+com/lxf/dao/SysLogDao.class
+com/lxf/dao/PermissionDao.class
+com/lxf/dao/UserDao.class
+com/lxf/dao/MemberDao.class
+com/lxf/dao/OrdersDao.class
+com/lxf/dao/TravellerDao.class
+com/lxf/dao/ProductDao.class
+com/lxf/dao/RoleDao.class

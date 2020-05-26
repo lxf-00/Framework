@@ -1,0 +1,12 @@
+com/lxf/service/impl/OrdersServiceImpl.class
+com/lxf/service/SysLogService.class
+com/lxf/service/PermissionService.class
+com/lxf/service/impl/UserServiceImpl.class
+com/lxf/service/ProductService.class
+com/lxf/service/impl/RoleServiceImpl.class
+com/lxf/service/impl/ProductServiceImpl.class
+com/lxf/service/UserService.class
+com/lxf/service/OrdersService.class
+com/lxf/service/RoleService.class
+com/lxf/service/impl/SysLogService/impl.class
+com/lxf/service/impl/PermissionServiceImpl.class

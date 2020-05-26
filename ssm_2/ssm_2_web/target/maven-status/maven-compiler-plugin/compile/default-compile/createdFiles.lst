@@ -1,0 +1,6 @@
+com/lxf/controller/ProductController.class
+com/lxf/controller/RoleController.class
+com/lxf/controller/PermissionController.class
+com/lxf/controller/UserController.class
+com/lxf/controller/OrdersController.class
+com/lxf/controller/LogAop.class

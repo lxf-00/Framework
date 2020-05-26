@@ -1,0 +1,8 @@
+com/lxf/domain/Permission.class
+com/lxf/domain/Orders.class
+com/lxf/domain/SysLog.class
+com/lxf/domain/Role.class
+com/lxf/domain/Product.class
+com/lxf/domain/Member.class
+com/lxf/domain/Traveller.class
+com/lxf/domain/UserInfo.class
