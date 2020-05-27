@@ -81,4 +81,53 @@ Spring 是分层的 Java SE/EE 应用 full-stack 轻量级开源框架，
   - [异常处理：自定义异常处理器](https://github.com/lxf-00/Framework/blob/master/springmvc/springMVC_04_exception/src/main/java/com/springMVC/exception/SysExceptionResolver.java)(使用请在配置文件中配置自定义异常处理器)
   - [拦截器](https://github.com/lxf-00/Framework/blob/master/springmvc/spring_05_interceptor/src/main/java/com/springMVC/interceptor/MyInterceptor1.java)[、配置拦截器](https://github.com/lxf-00/Framework/blob/master/springmvc/spring_05_interceptor/src/main/resources/springMVC.xml)
 ### 4. ssm 的整合
-- [maven高级应用分模块练习]
+- [整体案例](https://github.com/lxf-00/Framework/tree/master/ssm_2)
+- [整体pom](https://github.com/lxf-00/Framework/blob/master/ssm_2/pom.xml)
+- [整体配置示意图](https://github.com/lxf-00/Framework/blob/master/ssm_2/ssm%E6%95%B4%E5%90%88%E7%A4%BA%E6%84%8F%E5%9B%BE.001.jpeg)
+- 整合简单说明(github 图片无法正常显示预览，先占个位):
+  - [加载配置文件、配置监听器](https://github.com/lxf-00/Framework/blob/master/ssm_2/ssm_2_web/src/main/webapp/WEB-INF/web.xml) ( 前提：配置好spring springmvc 各自的配置文件)
+  - spring mybatis整合： 可将mybatis相关配置，配置到spring中，去除mybatis配置文件
+  - [大体配置文件示例](https://github.com/lxf-00/Framework/blob/master/ssm_2/ssm_2_web/src/main/resources/applicationContext.xml)
+  - [spring-security配置](https://github.com/lxf-00/Framework/blob/master/ssm_2/ssm_2_web/src/main/resources/spring-security.xml)[,示例](https://github.com/lxf-00/Framework/blob/master/ssm_2/ssm_2_service/src/main/java/com/lxf/service/impl/UserServiceImpl.java)
+
+### 5. SpringBoot
+- Spring Boot：搭建程序的脚手架。其最主要作用就是帮我们快速的构建庞大的spring项目，并且尽可能的减少一切xml配置，做到开箱即用，迅速上手，让我们关注与业务而非配置。
+- 简单案例分析：
+  - [起步依赖](https://github.com/lxf-00/Framework/blob/master/springboot_2/pom.xml)
+  - [java配置: 主要靠java类和一些注解](https://github.com/lxf-00/Framework/blob/master/springboot_2/src/main/java/com/example/config/JdbcConfig.java)
+- 热部署
+```
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+```
+  - 常用注解：
+    - @Configuration: 声明一个类作为配置类，代替xml文件
+    - @Bean：声明在方法上，将方法的返回值加入Bean容器，代替<bean>标签
+    - @PropertySource：指定外部属性文件(不常用)
+    - @Value： 属性注入(不常用)
+  - springboot 属性注入
+    - @ConfigurationProperties + @EnableConfigurationProperties + @Autowired
+- 自动配置原理:
+  - @SpringBootApplication -> SpringApplication.run()
+- 整合springMVC
+  - [修改端口](https://github.com/lxf-00/Framework/blob/master/springboot_2/src/main/resources/application.yml)
+  - 访问静态资源
+  - [自定义拦截器](https://github.com/lxf-00/Framework/blob/master/springboot_2/src/main/java/com/example/interceptor/Myinterceptor.java)[、添加拦截器](https://github.com/lxf-00/Framework/blob/master/springboot_2/src/main/java/com/example/config/MvcConfig.java)
+- 整合jdbc和事务: 添加jdbc和mysql启动依赖,使用@Transactional 注解即可
+- [整合连接池： 需要配置数据库相关信息](https://github.com/lxf-00/Framework/blob/master/springboot_2/src/main/resources/application.yml)
+- 整合mybatis:
+- 通用mapper(自带有mybatis, jdbc，可以只需配置 数据库启动依赖)
+- Thymeleaf
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+
+默认前缀：classpath:templates/
+默认后缀： .html
+```
+
+### 6. spirng
