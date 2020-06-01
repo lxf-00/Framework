@@ -130,4 +130,88 @@ Spring 是分层的 Java SE/EE 应用 full-stack 轻量级开源框架，
 默认后缀： .html
 ```
 
-### 6. spirng
+### 6. SpringCloud
+- 了解：
+  - 系统架构的演变：集中式架构 -> 垂直拆分 -> 分布式服务 -> 服务治理（SOA) -> 微服务
+  - 远程调用方式：RPC、HTTP
+  - RestTemplate
+- 分布式服务必然要面临的问题
+  - 服务管理: Eureka -> 服务注册中心(@EnableEurekaServer):提供服务注册和发现功能、高可用
+    - 服务提供者 -> 任何技术实现的提供Rest风格的应用(@EnableDiscoveryClient)：注册服务
+    - 服务消费者 -> 订阅服务、获取服务列表
+    - 心跳、续约: 提供者定期通过http方式向注册中心刷新自己的状态（实现状态监管）
+    ```yaml
+    eureka:
+      instance:
+        lease-expiration-duration-in-seconds: 90 # 续约间隔
+        lease-renewal-interval-in-seconds: 30 # 失效时间
+        生产环境不作更改；开发适当调小
+        instance-id: ${spring.application.name}:${server.port}
+        server:
+          enable-self-preservation: false # 关闭自我保护模式（缺省为打开）
+          eviction-interval-timer-in-ms: 1000 # 扫描失效服务的间隔时间（缺省为60*1000ms）
+    ```
+    - 配置：register-with-eureka; fetch-registry; service-url.defaultZone
+    - 如何实现动态路由: zuul 网关（@EnableZuulProxy)
+    ```
+    映射规则
+    zuul:
+      routes:
+        user-service: # 这里是路由id，随意写
+          path: /user-service/** # 这里是映射路径
+          url: http://127.0.0.1:8081 # 映射路径对应的实际url地址
+    添加eureka,简化路由规则
+    zuul:
+      routes:
+        user-service: /user-service/** # 这里是映射路径
+    路由前缀
+    zuul:
+      prefix: /api # 添加路由前缀
+      routes:
+          user-service: # 这里是路由id，随意写
+            path: /user-service/** # 这里是映射路径
+            service-id: user-service # 指定服务名称
+    ```
+      - 过滤器： ZuulFilter
+  - 服务如何实现负载均衡： Robbin(@LoadBalanced)
+  ```yaml
+  负载均衡规则修改： 轮询 -> 随机
+  user-service:
+    ribbon:
+      NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+  重试机制
+  spring:
+    cloud:
+      loadbalancer:
+        retry:
+          enabled: true # 开启Spring Cloud的重试功能
+  user-service:
+    ribbon:
+      ConnectTimeout: 250 # Ribbon的连接超时时间
+      ReadTimeout: 1000 # Ribbon的数据读取超时时间
+      OkToRetryOnAllOperations: true # 是否对所有操作都进行重试
+      MaxAutoRetriesNextServer: 1 # 切换实例的重试次数
+      MaxAutoRetries: 1 # 对当前实例的重试次数
+  ```
+  - 服务如何解决容灾问题： Hystrix 服务降级
+  ```
+  @HystrixCommand(fallbackMethod="queryUserByIdFallback")`：声明一个失败回滚处理函数queryUserByIdFallback，当queryUserById执行超时（默认是1000毫秒），就会执行fallback函数，返回错误提示。
+
+  设置hystix超时时间
+  hystrix:
+    command:
+    	default:
+          execution:
+            isolation:
+              thread:
+                timeoutInMillisecond: 6000 # 设置hystrix的超时时间为6000ms
+  ```
+  - Feign: @FeignClient(servId) @EnableFeignClients
+    - 默认集成Ribbon,hystix(默认是关闭)
+    ```
+    开启hystix
+    feign:
+      hystix:
+        enable: true
+    ```
+  - 服务如何实现统一配置
